@@ -44,6 +44,9 @@ if (bodyClosed) {
   bodyHtml = bodyOpen?.[1]?.trim() ?? "";
 }
 
+// Scripts run during initial HTML parse and mutate the DOM before React hydrates.
+bodyHtml = bodyHtml.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "").trim();
+
 const titleMatch = html.match(/<title>([^<]*)<\/title>/i);
 const metaContent = (attr, name) => {
   const re = new RegExp(

@@ -31,7 +31,7 @@ export default function PortfolioPage() {
           run <code>npm run extract</code>.
         </div>
       )}
-      <div dangerouslySetInnerHTML={{ __html: bodyHtml }} />
+      <div suppressHydrationWarning dangerouslySetInnerHTML={{ __html: bodyHtml }} />
       <PortfolioClient />
     </>
   );
