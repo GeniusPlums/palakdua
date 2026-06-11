@@ -45,24 +45,26 @@ if (bodyClosed) {
 }
 
 const titleMatch = html.match(/<title>([^<]*)<\/title>/i);
-const descMatch = html.match(
-  /name=["']description["']\s+content=["']([^"']*)["']/i,
-);
-const ogTitleMatch = html.match(
-  /property=["']og:title["']\s+content=["']([^"']*)["']/i,
-);
-const ogDescMatch = html.match(
-  /property=["']og:description["']\s+content=["']([^"']*)["']/i,
-);
+const metaContent = (attr, name) => {
+  const re = new RegExp(
+    `${attr}=["']${name}["']\\s+content=(["'])((?:(?!\\1).)*)\\1`,
+    "i",
+  );
+  return html.match(re)?.[2] ?? "";
+};
+
+const description = metaContent("name", "description");
+const ogTitle = metaContent("property", "og:title");
+const ogDescription = metaContent("property", "og:description");
 const iconMatch = html.match(
   /<link[^>]+rel=["']icon["'][^>]+href=["']([^"']+)["']/i,
 );
 
 const metadata = {
   title: titleMatch?.[1] ?? "Palak Dua",
-  description: descMatch?.[1] ?? "",
-  ogTitle: ogTitleMatch?.[1] ?? titleMatch?.[1] ?? "",
-  ogDescription: ogDescMatch?.[1] ?? descMatch?.[1] ?? "",
+  description,
+  ogTitle: ogTitle || titleMatch?.[1] || "",
+  ogDescription: ogDescription || description,
   icon: iconMatch?.[1] ?? "",
   sourcePath: path.relative(root, sourcePath),
   complete,
